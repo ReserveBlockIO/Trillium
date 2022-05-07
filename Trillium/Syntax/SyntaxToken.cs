@@ -1,4 +1,4 @@
-﻿namespace Trillium.CodeAnalysis
+﻿namespace Trillium.Syntax
 {
     public sealed class SyntaxToken : SyntaxNode
     {

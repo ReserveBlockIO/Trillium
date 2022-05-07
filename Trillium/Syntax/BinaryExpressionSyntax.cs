@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Trillium.CodeAnalysis
+namespace Trillium.Syntax
 {
     public sealed class BinaryExpressionSyntax : ExpressionSyntax
     {
