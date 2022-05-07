@@ -23,7 +23,7 @@ namespace Trillium.CodeAnalysis
         private int EvaluateExpression(ExpressionSyntax node)
         {
             if (node is LiteralExpressionSyntax n)
-                return (int)n.NumberToken.Value;
+                return (int)n.LiteralToken.Value;
 
             if (node is BinaryExpressionSyntax b)
             {
