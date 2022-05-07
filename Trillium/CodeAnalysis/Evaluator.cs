@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Trillium.CodeAnalysis
 {
-    class Evaluator
+    public sealed class Evaluator
     {
         private readonly ExpressionSyntax _root;
 
@@ -22,7 +22,7 @@ namespace Trillium.CodeAnalysis
 
         private int EvaluateExpression(ExpressionSyntax node)
         {
-            if (node is NumberExpressionSyntax n)
+            if (node is LiteralExpressionSyntax n)
                 return (int)n.NumberToken.Value;
 
             if (node is BinaryExpressionSyntax b)
