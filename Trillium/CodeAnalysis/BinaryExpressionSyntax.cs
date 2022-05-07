@@ -27,4 +27,5 @@ namespace Trillium.CodeAnalysis
             yield return Right;
         }
     }
+
 }
