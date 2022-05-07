@@ -1,41 +1,84 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Trillium.CodeAnalysis;
+
 namespace Trillium
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            bool showTree = false;
 
-            Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
+            while (true)
             {
-                Console.WriteLine();
-                Console.WriteLine("Goodbye! ¡Adiós! Ciao! Adieu! Adeus! Tschüss! Пока! 再见 さようなら הֱיה שלום وداعا");
-            };
+                Console.Write("> ");
+                var line = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(line))
+                    return;
 
-            ClearLine();
+                if (line == "#showTree")
+                {
+                    showTree = !showTree;
+                    Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees");
+                    continue;
+                }
+                else if (line == "#cls")
+                {
+                    Console.Clear();
+                    continue;
+                }
 
-            var argList = args.ToList();
-            if(argList.Any())
-            {
-                argList.ForEach(x => {
-                    var arg = x.ToLower();
-                });
+                var syntaxTree = SyntaxTree.Parse(line);
+
+                if (showTree)
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    PrettyPrint(syntaxTree.Root);
+                    Console.ForegroundColor = color;
+                }
+
+                if (!syntaxTree.Diagnostics.Any())
+                {
+                    var e = new Evaluator(syntaxTree.Root);
+                    var result = e.Evaluate();
+                    Console.WriteLine(result);
+                }
+                else
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+
+                    foreach (var diagnostic in syntaxTree.Diagnostics)
+                        Console.WriteLine(diagnostic);
+
+                    Console.ForegroundColor = color;
+                }
             }
         }
 
-        private static void ClearLine(string part1 = "", string part2 = "")
+        static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
         {
-            string spaces = new string(' ', part1.Length + part2.Length + 1);
-            Console.Write("\r{0}\r", spaces);
-        }
+            var marker = isLast ? "└──" : "├──";
 
-        private static void SetCursor(string prompt, string line, int pos)
-        {
-            ClearLine(prompt, line);
-            Console.Write("{0}{1}\r{2}{3}",
-              prompt, line, prompt, line.Substring(0, pos));
-        }
+            Console.Write(indent);
+            Console.Write(marker);
+            Console.Write(node.Kind);
 
+            if (node is SyntaxToken t && t.Value != null)
+            {
+                Console.Write(" ");
+                Console.Write(t.Value);
+            }
+
+            Console.WriteLine();
+
+            indent += isLast ? "    " : "│   ";
+
+            var lastChild = node.GetChildren().LastOrDefault();
+
+            foreach (var child in node.GetChildren())
+                PrettyPrint(child, indent, child == lastChild);
+        }
     }
 }
