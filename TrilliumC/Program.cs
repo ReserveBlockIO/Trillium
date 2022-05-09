@@ -15,10 +15,14 @@ namespace Trillium
 
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
+
                 if (textBuilder.Length == 0)
-                    Console.Write("> ");
+                    Console.Write("» ");
                 else
-                    Console.Write("| ");
+                    Console.Write("· ");
+
+                Console.ResetColor();
 
                 var input = Console.ReadLine();
                 var isBlank = string.IsNullOrWhiteSpace(input);
@@ -55,14 +59,14 @@ namespace Trillium
 
                 if (showTree)
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     syntaxTree.Root.WriteTo(Console.Out);
-                    Console.ResetColor();
                 }
 
                 if (!result.Diagnostics.Any())
                 {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine(result.Value);
+                    Console.ResetColor();
                 }
                 else
                 {
