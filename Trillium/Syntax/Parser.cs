@@ -1,12 +1,13 @@
-﻿using Trillium.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Trillium.CodeAnalysis;
 
 namespace Trillium.Syntax
 {
     internal sealed class Parser
     {
-        private readonly SyntaxToken[] _tokens;
+        private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
+        private readonly ImmutableArray<SyntaxToken> _tokens;
 
-        private DiagnosticBag _diagnostics = new DiagnosticBag();
         private int _position;
 
         public Parser(string text)
@@ -26,7 +27,7 @@ namespace Trillium.Syntax
                 }
             } while (token.Kind != SyntaxKind.EndOfFileToken);
 
-            _tokens = tokens.ToArray();
+            _tokens = tokens.ToImmutableArray();
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
@@ -58,19 +59,22 @@ namespace Trillium.Syntax
             _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
             return new SyntaxToken(kind, Current.Position, null, null);
         }
+
         public SyntaxTree Parse()
         {
             var expresion = ParseExpression();
             var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(_diagnostics, expresion, endOfFileToken);
+            return new SyntaxTree(_diagnostics.ToImmutableArray(), expresion, endOfFileToken);
         }
+
         private ExpressionSyntax ParseExpression()
         {
             return ParseAssignmentExpression();
         }
+
         private ExpressionSyntax ParseAssignmentExpression()
         {
-            if(Peek(0).Kind == SyntaxKind.IdentifierToken &&
+            if (Peek(0).Kind == SyntaxKind.IdentifierToken &&
                 Peek(1).Kind == SyntaxKind.EqualsToken)
             {
                 var identifierToken = NextToken();
@@ -81,11 +85,12 @@ namespace Trillium.Syntax
 
             return ParseBinaryExpression();
         }
+
         private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
         {
             ExpressionSyntax left;
             var unaryOperatorPrecedence = Current.Kind.GetUnaryOperatorPrecedence();
-            if(unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
+            if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
             {
                 var operatorToken = NextToken();
                 var operand = ParseBinaryExpression(unaryOperatorPrecedence);
@@ -96,7 +101,7 @@ namespace Trillium.Syntax
                 left = ParsePrimaryExpression();
             }
 
-            while(true)
+            while (true)
             {
                 var precedence = Current.Kind.GetBinaryOperatorPrecedence();
                 if (precedence == 0 || precedence <= parentPrecedence)
@@ -109,39 +114,52 @@ namespace Trillium.Syntax
 
             return left;
         }
+
         private ExpressionSyntax ParsePrimaryExpression()
         {
             switch (Current.Kind)
             {
                 case SyntaxKind.OpenParenthesisToken:
-                {
-                    var left = NextToken();
-                    var expression = ParseExpression();
-                    var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-                    return new ParenthesizedExpressionSyntax(left, expression, right);
-                }
+                    return ParseParenthesizedExpression();
 
                 case SyntaxKind.FalseKeyword:
                 case SyntaxKind.TrueKeyword:
-                {
-                    var keywordToken = NextToken();
-                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
-                    return new LiteralExpressionSyntax(keywordToken, value);
-                }
+                    return ParseBooleanLiteral();
+
+                case SyntaxKind.NumberToken:
+                    return ParseNumberLiteral();
 
                 case SyntaxKind.IdentifierToken:
-                {
-                    var identifierToken = NextToken();
-                    return new NameExpressionSyntax(identifierToken);
-                }
-
                 default:
-                {
-                    var numberToken = MatchToken(SyntaxKind.NumberToken);
-                    return new LiteralExpressionSyntax(numberToken);
-                }
+                    return ParseNameExpression();
             }
+        }
 
+        private ExpressionSyntax ParseParenthesizedExpression()
+        {
+            var left = MatchToken(SyntaxKind.OpenParenthesisToken);
+            var expression = ParseExpression();
+            var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+            return new ParenthesizedExpressionSyntax(left, expression, right);
+        }
+
+        private ExpressionSyntax ParseBooleanLiteral()
+        {
+            var isTrue = Current.Kind == SyntaxKind.TrueKeyword;
+            var keywordToken = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
+            return new LiteralExpressionSyntax(keywordToken, isTrue);
+        }
+
+        private ExpressionSyntax ParseNumberLiteral()
+        {
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
+        }
+
+        private ExpressionSyntax ParseNameExpression()
+        {
+            var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
+            return new NameExpressionSyntax(identifierToken);
         }
     }
 }
