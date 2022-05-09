@@ -8,6 +8,7 @@ namespace Trillium
         private static void Main()
         {
             var showTree = false;
+            var variables = new Dictionary<VariableSymbol, object>();
 
             while (true)
             {
@@ -16,23 +17,35 @@ namespace Trillium
                 if (string.IsNullOrWhiteSpace(line))
                     return;
 
-                if (line == "#showTree")
+                if (line == "#Tree")
                 {
                     showTree = !showTree;
                     Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees");
                     continue;
                 }
-                else if (line == "#cls")
+                else if (line == "#clear")
                 {
                     Console.Clear();
                     continue;
                 }
+                else if (line == "#exit")
+                {
+                    Console.WriteLine("Trillium Exiting in 3 seconds...");
+                    Console.WriteLine("...3");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("...2");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("...1");
+                    Thread.Sleep(1000);
+                    Console.WriteLine("...0");
+                    Environment.Exit(0);
+                }
+
 
                 var syntaxTree = SyntaxTree.Parse(line);
                 var compilation = new Compilation(syntaxTree);
-                var result = compilation.Evaluate();
+                var result = compilation.Evaluate(variables);
 
-                var diagnostics = result.Diagnostics;
                 if (showTree)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -40,18 +53,16 @@ namespace Trillium
                     Console.ResetColor();
                 }
 
-                
-                if (!diagnostics.Any())
+                if (!result.Diagnostics.Any())
                 {
                     Console.WriteLine(result.Value);
                 }
                 else
                 {
-                    
-
-                    foreach (var diagnostic in diagnostics)
+                    foreach (var diagnostic in result.Diagnostics)
                     {
                         Console.WriteLine();
+
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine(diagnostic);
                         Console.ResetColor();
@@ -71,6 +82,7 @@ namespace Trillium
 
                         Console.WriteLine();
                     }
+
                     Console.WriteLine();
                 }
             }

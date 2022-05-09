@@ -16,15 +16,17 @@ namespace Trillium.Syntax
         public DiagnosticBag Diagnostics => _diagnostics;
 
         private char Current => Peek(0);
+
         private char Lookahead => Peek(1);
 
         private char Peek(int offset)
         {
-            var index = _position + offset; 
+            var index = _position + offset;
+
             if (index >= _text.Length)
                 return '\0';
 
-            return _text[_position];
+            return _text[index];
         }
 
         private void Next()
@@ -62,7 +64,7 @@ namespace Trillium.Syntax
                 return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, null);
             }
 
-            if(char.IsLetter(Current))
+            if (char.IsLetter(Current))
             {
                 while (char.IsLetter(Current))
                     Next();
@@ -88,7 +90,7 @@ namespace Trillium.Syntax
                 case ')':
                     return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
                 case '&':
-                    if(Lookahead == '&')
+                    if (Lookahead == '&')
                     {
                         _position += 2;
                         return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&", null);
@@ -105,11 +107,15 @@ namespace Trillium.Syntax
                     if (Lookahead == '=')
                     {
                         _position += 2;
-                        return new SyntaxToken(SyntaxKind.EqualsEqualToken, start, "==", null);
+                        return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
                     }
-                    break;
+                    else
+                    {
+                        _position += 1;
+                        return new SyntaxToken(SyntaxKind.EqualsToken, start, "=", null);
+                    }
                 case '!':
-                    if (Lookahead == '!')
+                    if (Lookahead == '=')
                     {
                         _position += 2;
                         return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=", null);

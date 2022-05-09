@@ -33,7 +33,7 @@ namespace Trillium.Syntax
                 case SyntaxKind.MinusToken:
                     return 4;
 
-                case SyntaxKind.EqualsEqualToken:
+                case SyntaxKind.EqualsEqualsToken:
                 case SyntaxKind.BangEqualsToken:
                     return 3;
 

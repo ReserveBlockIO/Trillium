@@ -16,6 +16,7 @@ namespace Trillium.CodeAnalysis
         {
             _diagnostics.AddRange(diagnostics._diagnostics);
         }
+
         private void Report(TextSpan span, string message)
         {
             var diagnostic = new Diagnostic(span, message);
@@ -24,14 +25,14 @@ namespace Trillium.CodeAnalysis
 
         public void ReportInvalidNumber(TextSpan span, string text, Type type)
         {
-            var message = $"The number {text} isn't a valid {type}.";
+            var message = $"The number {text} isn't valid {type}.";
             Report(span, message);
         }
 
         public void ReportBadCharacter(int position, char character)
         {
             var span = new TextSpan(position, 1);
-            var message = $"Bad character input: '{character}'";
+            var message = $"Bad character input: '{character}'.";
             Report(span, message);
         }
 
@@ -52,6 +53,11 @@ namespace Trillium.CodeAnalysis
             var message = $"Binary operator '{operatorText}' is not defined for types {leftType} and {rightType}.";
             Report(span, message);
         }
-    }
 
+        public void ReportUndefinedName(TextSpan span, string name)
+        {
+            var message = $"Variable '{name}' doesn't exist.";
+            Report(span, message);
+        }
+    }
 }
