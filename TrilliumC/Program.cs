@@ -12,6 +12,7 @@ namespace Trillium
             var showTree = false;
             var variables = new Dictionary<VariableSymbol, object>();
             var textBuilder = new StringBuilder();
+            Compilation previous = null;
 
             while (true)
             {
@@ -44,6 +45,24 @@ namespace Trillium
                         Console.Clear();
                         continue;
                     }
+                    else if (input == "#reset")
+                    {
+                        previous = null;
+                        variables.Clear();
+                        continue;
+                    }
+                    else if (input == "#exit")
+                    {
+                        Console.WriteLine("Trillium Exiting in 3 seconds...");
+                        Console.WriteLine("» ...3");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("» ...2");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("» ...1");
+                        Thread.Sleep(1000);
+                        Console.WriteLine("» ...0");
+                        Environment.Exit(0);
+                    }
                 }
 
                 textBuilder.AppendLine(input);
@@ -54,7 +73,10 @@ namespace Trillium
                 if (!isBlank && syntaxTree.Diagnostics.Any())
                     continue;
 
-                var compilation = new Compilation(syntaxTree);
+                var compilation = previous == null
+                                    ? new Compilation(syntaxTree)
+                                    : previous.ContinueWith(syntaxTree);
+
                 var result = compilation.Evaluate(variables);
 
                 if (showTree)
@@ -67,6 +89,7 @@ namespace Trillium
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine(result.Value);
                     Console.ResetColor();
+                    previous = compilation;
                 }
                 else
                 {

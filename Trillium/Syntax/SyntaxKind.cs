@@ -24,7 +24,10 @@
         //Keywords
         FalseKeyword,
         TrueKeyword,
-        
+
+        // Nodes
+        CompilationUnit,
+
         // Expressions
         LiteralExpression,
         NameExpression,
@@ -32,6 +35,5 @@
         BinaryExpression,
         ParenthesizedExpression,
         AssignmentExpression,
-        
     }
 }
