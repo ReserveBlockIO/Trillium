@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrilliumC", "TrilliumC\TrilliumC.csproj", "{EAC9F263-491B-4AC0-B6FC-E71F9D7BCC8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trillium", "Trillium\Trillium.csproj", "{0CBB694F-57AB-4153-A223-2BE8FBA7808A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trillium", "Trillium\Trillium.csproj", "{0CBB694F-57AB-4153-A223-2BE8FBA7808A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trillium.Test", "Trillium.Test\Trillium.Test.csproj", "{F5216AE2-9599-4064-975A-6DF70679E41D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0CBB694F-57AB-4153-A223-2BE8FBA7808A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CBB694F-57AB-4153-A223-2BE8FBA7808A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CBB694F-57AB-4153-A223-2BE8FBA7808A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5216AE2-9599-4064-975A-6DF70679E41D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5216AE2-9599-4064-975A-6DF70679E41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5216AE2-9599-4064-975A-6DF70679E41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5216AE2-9599-4064-975A-6DF70679E41D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
