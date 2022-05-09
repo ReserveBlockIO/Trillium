@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Trillium.Syntax;
+using Trillium.Text;
 
 namespace Trillium.CodeAnalysis
 {

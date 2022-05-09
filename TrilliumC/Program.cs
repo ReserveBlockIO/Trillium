@@ -17,30 +17,17 @@ namespace Trillium
                 if (string.IsNullOrWhiteSpace(line))
                     return;
 
-                if (line == "#Tree")
+                if (line == "#showTree")
                 {
                     showTree = !showTree;
                     Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees");
                     continue;
                 }
-                else if (line == "#clear")
+                else if (line == "#cls")
                 {
                     Console.Clear();
                     continue;
                 }
-                else if (line == "#exit")
-                {
-                    Console.WriteLine("Trillium Exiting in 3 seconds...");
-                    Console.WriteLine("...3");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("...2");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("...1");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("...0");
-                    Environment.Exit(0);
-                }
-
 
                 var syntaxTree = SyntaxTree.Parse(line);
                 var compilation = new Compilation(syntaxTree);
@@ -49,7 +36,7 @@ namespace Trillium
                 if (showTree)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    PrettyPrint(syntaxTree.Root);
+                    syntaxTree.Root.WriteTo(Console.Out);
                     Console.ResetColor();
                 }
 
@@ -86,30 +73,6 @@ namespace Trillium
                     Console.WriteLine();
                 }
             }
-        }
-
-        static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true)
-        {
-            var marker = isLast ? "└──" : "├──";
-
-            Console.Write(indent);
-            Console.Write(marker);
-            Console.Write(node.Kind);
-
-            if (node is SyntaxToken t && t.Value != null)
-            {
-                Console.Write(" ");
-                Console.Write(t.Value);
-            }
-
-            Console.WriteLine();
-
-            indent += isLast ? "   " : "│  ";
-
-            var lastChild = node.GetChildren().LastOrDefault();
-
-            foreach (var child in node.GetChildren())
-                PrettyPrint(child, indent, child == lastChild);
         }
     }
 }

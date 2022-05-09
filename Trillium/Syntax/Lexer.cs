@@ -1,4 +1,5 @@
 ﻿using Trillium.CodeAnalysis;
+using Trillium.Text;
 
 namespace Trillium.Syntax
 {

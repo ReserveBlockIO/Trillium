@@ -1,4 +1,6 @@
-﻿namespace Trillium.CodeAnalysis
+﻿using Trillium.Text;
+
+namespace Trillium.CodeAnalysis
 {
     public sealed class Diagnostic
     { 
