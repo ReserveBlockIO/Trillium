@@ -21,6 +21,7 @@ namespace Trillium.Syntax
                     return 0;
             }
         }
+
         public static int GetBinaryOperatorPrecedence(this SyntaxKind kind)
         {
             switch (kind)
@@ -56,14 +57,24 @@ namespace Trillium.Syntax
         {
             switch (text)
             {
+                case "else":
+                    return SyntaxKind.ElseKeyword;
                 case "false":
                     return SyntaxKind.FalseKeyword;
+                case "for":
+                    return SyntaxKind.ForKeyword;
+                case "if":
+                    return SyntaxKind.IfKeyword;
                 case "let":
                     return SyntaxKind.LetKeyword;
+                case "to":
+                    return SyntaxKind.ToKeyword;
                 case "true":
                     return SyntaxKind.TrueKeyword;
                 case "var":
                     return SyntaxKind.VarKeyword;
+                case "while":
+                    return SyntaxKind.WhileKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -129,14 +140,24 @@ namespace Trillium.Syntax
                     return "{";
                 case SyntaxKind.CloseBraceToken:
                     return "}";
+                case SyntaxKind.ElseKeyword:
+                    return "else";
                 case SyntaxKind.FalseKeyword:
                     return "false";
+                case SyntaxKind.ForKeyword:
+                    return "for";
+                case SyntaxKind.IfKeyword:
+                    return "if";
                 case SyntaxKind.LetKeyword:
                     return "let";
+                case SyntaxKind.ToKeyword:
+                    return "to";
                 case SyntaxKind.TrueKeyword:
                     return "true";
                 case SyntaxKind.VarKeyword:
                     return "var";
+                case SyntaxKind.WhileKeyword:
+                    return "while";
                 default:
                     return null;
             }

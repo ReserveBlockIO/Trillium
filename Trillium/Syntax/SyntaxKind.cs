@@ -28,19 +28,28 @@
         IdentifierToken,
 
         //Keywords
+        ElseKeyword,
         FalseKeyword,
+        ForKeyword,
+        IfKeyword,
         LetKeyword,
+        ToKeyword,
         TrueKeyword,
         VarKeyword,
+        WhileKeyword,
 
         // Nodes
         CompilationUnit,
+        ElseClause,
 
         // Statements
         BlockStatement,
         VariableDeclaration,
+        IfStatement,
+        WhileStatement,
+        ForStatement,
         ExpressionStatement,
-
+        
         // Expressions
         LiteralExpression,
         NameExpression,
