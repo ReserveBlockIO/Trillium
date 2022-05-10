@@ -37,7 +37,7 @@ namespace Trillium
                     else if (input == "#showTree")
                     {
                         showTree = !showTree;
-                        Console.WriteLine(showProgram ? "Showing bound tree." : "Not showing bound tree.");
+                        Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees");
                         continue;
                     }
                     else if (input == "#cls")
