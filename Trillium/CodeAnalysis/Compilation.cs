@@ -11,7 +11,7 @@ namespace Trillium.CodeAnalysis
         public Compilation(SyntaxTree syntaxTree)
             : this(null, syntaxTree)
         {
-            SyntaxTree = syntaxTree;
+
         }
 
         private Compilation(Compilation previous, SyntaxTree syntaxTree)
@@ -48,7 +48,7 @@ namespace Trillium.CodeAnalysis
             if (diagnostics.Any())
                 return new EvaluationResult(diagnostics, null);
 
-            var evaluator = new Evaluator(GlobalScope.Expression, variables);
+            var evaluator = new Evaluator(GlobalScope.Statement, variables);
             var value = evaluator.Evaluate();
             return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
         }
