@@ -37,9 +37,6 @@ namespace Trillium.CodeAnalysis
                 case BoundNodeKind.WhileStatement:
                     EvaluateWhileStatement((BoundWhileStatement)node);
                     break;
-                case BoundNodeKind.ForStatement:
-                    EvaluateForStatement((BoundForStatement)node);
-                    break;
                 case BoundNodeKind.ExpressionStatement:
                     EvaluateExpressionStatement((BoundExpressionStatement)node);
                     break;
@@ -74,18 +71,6 @@ namespace Trillium.CodeAnalysis
         {
             while ((bool)EvaluateExpression(node.Condition))
                 EvaluateStatement(node.Body);
-        }
-
-        private void EvaluateForStatement(BoundForStatement node)
-        {
-            var lowerBound = (int)EvaluateExpression(node.LowerBound);
-            var upperBound = (int)EvaluateExpression(node.UpperBound);
-
-            for (var i = lowerBound; i <= upperBound; i++)
-            {
-                _variables[node.Variable] = i;
-                EvaluateStatement(node.Body);
-            }
         }
 
         private void EvaluateExpressionStatement(BoundExpressionStatement node)
@@ -141,6 +126,8 @@ namespace Trillium.CodeAnalysis
                     return -(int)operand;
                 case BoundUnaryOperatorKind.LogicalNegation:
                     return !(bool)operand;
+                case BoundUnaryOperatorKind.OnesComplement:
+                    return ~(int)operand;
                 default:
                     throw new Exception($"Unexpected unary operator {u.Op}");
             }
@@ -161,6 +148,21 @@ namespace Trillium.CodeAnalysis
                     return (int)left * (int)right;
                 case BoundBinaryOperatorKind.Division:
                     return (int)left / (int)right;
+                case BoundBinaryOperatorKind.BitwiseAnd:
+                    if (b.Type == (typeof(int)))
+                        return (int)left & (int)right;
+                    else
+                        return (bool)left & (bool)right;
+                case BoundBinaryOperatorKind.BitwiseOr:
+                    if (b.Type == (typeof(int)))
+                        return (int)left | (int)right;
+                    else
+                        return (bool)left | (bool)right;
+                case BoundBinaryOperatorKind.BitwiseXor:
+                    if (b.Type == (typeof(int)))
+                        return (int)left ^ (int)right;
+                    else
+                        return (bool)left ^ (bool)right;
                 case BoundBinaryOperatorKind.LogicalAnd:
                     return (bool)left && (bool)right;
                 case BoundBinaryOperatorKind.LogicalOr:
