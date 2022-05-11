@@ -35,6 +35,11 @@ namespace Trillium.CodeAnalysis
             var message = $"Bad character input: '{character}'.";
             Report(span, message);
         }
+        public void ReportUnterminatedString(TextSpan span)
+        {
+            var message = "Unterminated string literal.";
+            Report(span, message);
+        }
 
         public void ReportUnexpectedToken(TextSpan span, SyntaxKind actualKind, SyntaxKind expectedKind)
         {
