@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Trillium.CodeAnalysis;
+using Trillium.Symbols;
 
 namespace Trillium.Binding
 {

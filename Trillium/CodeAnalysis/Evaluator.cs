@@ -1,4 +1,5 @@
 ﻿using Trillium.Binding;
+using Trillium.Symbols;
 
 namespace Trillium.CodeAnalysis
 {

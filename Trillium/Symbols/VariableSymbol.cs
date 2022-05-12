@@ -1,4 +1,4 @@
-﻿namespace Trillium.CodeAnalysis
+﻿namespace Trillium.Symbols
 {
     public sealed class VariableSymbol
     {
