@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Trillium.CodeAnalysis;
 using Trillium.Symbols;
 using Trillium.Syntax;
@@ -110,26 +109,28 @@ namespace Trillium.Binding
 
         private BoundStatement BindIfStatement(IfStatementSyntax syntax)
         {
-            var condition = BindExpression(syntax.Condition, typeof(bool));
+            var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
             var thenStatement = BindStatement(syntax.ThenStatement);
             var elseStatement = syntax.ElseClause == null ? null : BindStatement(syntax.ElseClause.ElseStatement);
             return new BoundIfStatement(condition, thenStatement, elseStatement);
         }
+
         private BoundStatement BindWhileStatement(WhileStatementSyntax syntax)
         {
-            var condition = BindExpression(syntax.Condition, typeof(bool));
+            var condition = BindExpression(syntax.Condition, TypeSymbol.Bool);
             var body = BindStatement(syntax.Body);
             return new BoundWhileStatement(condition, body);
         }
+
         private BoundStatement BindForStatement(ForStatementSyntax syntax)
         {
-            var lowerBound = BindExpression(syntax.LowerBound, typeof(int));
-            var upperBound = BindExpression(syntax.UpperBound, typeof(int));
+            var lowerBound = BindExpression(syntax.LowerBound, TypeSymbol.Int);
+            var upperBound = BindExpression(syntax.UpperBound, TypeSymbol.Int);
 
             _scope = new BoundScope(_scope);
 
             var name = syntax.Identifier.Text;
-            var variable = new VariableSymbol(name, true, typeof(int));
+            var variable = new VariableSymbol(name, true, TypeSymbol.Int);
             if (!_scope.TryDeclare(variable))
                 _diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
 
@@ -139,13 +140,14 @@ namespace Trillium.Binding
 
             return new BoundForStatement(variable, lowerBound, upperBound, body);
         }
+
         private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
         {
             var expression = BindExpression(syntax.Expression);
             return new BoundExpressionStatement(expression);
         }
 
-        private BoundExpression BindExpression(ExpressionSyntax syntax, Type targetType)
+        private BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol targetType)
         {
             var result = BindExpression(syntax);
             if (result.Type != targetType)

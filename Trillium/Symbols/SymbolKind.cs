@@ -8,6 +8,7 @@ namespace Trillium.Symbols
 {
     public enum SymbolKind
     {
-        Variable
+        Variable,
+        Type
     }
 }

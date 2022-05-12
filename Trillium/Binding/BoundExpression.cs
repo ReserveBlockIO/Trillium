@@ -1,8 +1,10 @@
-﻿namespace Trillium.Binding
+﻿using Trillium.Symbols;
+
+namespace Trillium.Binding
 {
     internal abstract class BoundExpression : BoundNode
     {
-        public abstract Type Type { get; }
+        public abstract TypeSymbol Type { get; }
     }
 
 }
