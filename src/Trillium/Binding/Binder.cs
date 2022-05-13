@@ -578,20 +578,20 @@ namespace Trillium.Binding
             return variable;
         }
 
-        private VariableSymbol BindVariableReference(SyntaxToken IdentifierToken)
+        private VariableSymbol BindVariableReference(SyntaxToken identifierToken)
         {
-            var name = IdentifierToken.Text;
+            var name = identifierToken.Text;
             switch (_scope.TryLookupSymbol(name))
             {
                 case VariableSymbol variable:
                     return variable;
 
                 case null:
-                    _diagnostics.ReportUndefinedVariable(IdentifierToken.Location, name);
+                    _diagnostics.ReportUndefinedVariable(identifierToken.Location, name);
                     return null;
 
                 default:
-                    _diagnostics.ReportNotAVariable(IdentifierToken.Location, name);
+                    _diagnostics.ReportNotAVariable(identifierToken.Location, name);
                     return null;
             }
         }
