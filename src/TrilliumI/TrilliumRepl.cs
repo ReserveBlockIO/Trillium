@@ -188,7 +188,7 @@ namespace TrilliumI
         private static string GetSubmissionsDirectory()
         {
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var submissionsDirectory = Path.Combine(localAppData, "Minsk", "Submissions");
+            var submissionsDirectory = Path.Combine(localAppData, "Trillium", "Submissions");
             return submissionsDirectory;
         }
 
