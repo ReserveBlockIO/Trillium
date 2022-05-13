@@ -250,6 +250,18 @@ namespace Trillium.CodeAnalysis
 
                 return _random.Next(max);
             }
+            else if (node.Function == BuiltinFunctions.Send)
+            {
+                Dictionary<string, string[]> messageDict = new Dictionary<string, string[]>();
+                var message = (string)EvaluateExpression(node.Arguments[0]);
+                if(message != "" && message != null)
+                {
+                    messageDict.Add("NFTMain", message.Split(new string[] { "|->" }, StringSplitOptions.None));
+                    //send to CLI
+                }
+                Console.WriteLine(message);
+                return null;
+            }
             else
             {
                 var locals = new Dictionary<VariableSymbol, object>();

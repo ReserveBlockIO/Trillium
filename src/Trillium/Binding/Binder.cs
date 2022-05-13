@@ -130,7 +130,7 @@ namespace Trillium.Binding
             {
                 var binder = new Binder(isScript, parentScope, function);
                 var body = binder.BindStatement(function.Declaration.Body);
-                var loweredBody = Lowerer.Lower(function, body);
+                var loweredBody = Lowerer.Lower(body);
 
                 if (function.Type != TypeSymbol.Void && !ControlFlowGraph.AllPathsReturn(loweredBody))
                     binder._diagnostics.ReportAllPathsMustReturn(function.Declaration.Identifier.Location);
@@ -142,7 +142,7 @@ namespace Trillium.Binding
 
             if (globalScope.MainFunction != null && globalScope.Statements.Any())
             {
-                var body = Lowerer.Lower(globalScope.MainFunction, new BoundBlockStatement(globalScope.Statements));
+                var body = Lowerer.Lower(new BoundBlockStatement(globalScope.Statements));
                 functionBodies.Add(globalScope.MainFunction, body);
             }
             else if (globalScope.ScriptFunction != null)
@@ -160,7 +160,7 @@ namespace Trillium.Binding
                     statements = statements.Add(new BoundReturnStatement(nullValue));
                 }
 
-                var body = Lowerer.Lower(globalScope.ScriptFunction, new BoundBlockStatement(statements));
+                var body = Lowerer.Lower(new BoundBlockStatement(statements));
                 functionBodies.Add(globalScope.ScriptFunction, body);
             }
 
@@ -187,7 +187,7 @@ namespace Trillium.Binding
                 }
                 else
                 {
-                    var parameter = new ParameterSymbol(parameterName, parameterType, parameters.Count);
+                    var parameter = new ParameterSymbol(parameterName, parameterType);
                     parameters.Add(parameter);
                 }
             }
@@ -429,7 +429,7 @@ namespace Trillium.Binding
                 else if (expression != null)
                 {
                     // Main does not support return values.
-                    _diagnostics.ReportInvalidReturnWithValueInGlobalStatements(syntax.Expression.Location);
+                    _diagnostics.ReportInvalidReturnExpression(syntax.Expression.Location, _function.Name);
                 }
             }
             else

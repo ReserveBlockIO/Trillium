@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using Trillium.Binding;
-using Trillium.Emit;
 using Trillium.Lowering;
 using Trillium.Symbols;
 using Trillium.Syntax;
@@ -134,12 +133,6 @@ namespace Trillium.CodeAnalysis
             if (!program.Functions.TryGetValue(symbol, out var body))
                 return;
             body.WriteTo(writer);
-        }
-
-        public ImmutableArray<Diagnostic> Emit(string moduleName, string[] references, string outputPath)
-        {
-            var program = GetProgram();
-            return Emitter.Emit(program, moduleName, references, outputPath);
         }
     }
 }
