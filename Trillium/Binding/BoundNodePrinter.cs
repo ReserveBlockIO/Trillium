@@ -1,4 +1,7 @@
 ﻿using System.CodeDom.Compiler;
+using Trillium.IO;
+using Trillium.Symbols;
+using Trillium.Syntax;
 
 namespace Trillium.Binding
 {
