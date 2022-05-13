@@ -1,11 +1,12 @@
 ﻿using Trillium.CodeAnalysis;
+using Trillium.IO;
 using Trillium.Symbols;
 using Trillium.Syntax;
 using Trillium.Text;
 
 namespace TrilliumC
 {
-    internal sealed class TrilliumRepl : Repl
+    internal sealed class MinskRepl : Repl
     {
         private Compilation _previous;
         private bool _showTree;
@@ -58,22 +59,12 @@ namespace TrilliumC
                     _previous = null;
                     _variables.Clear();
                     break;
-                case "#exit":
-                    Console.WriteLine("Trillium Exiting in 3 seconds...");
-                    Console.WriteLine("» ...3");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("» ...2");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("» ...1");
-                    Thread.Sleep(1000);
-                    Console.WriteLine("» ...0");
-                    Environment.Exit(0);
-                    break;
                 default:
                     base.EvaluateMetaCommand(input);
                     break;
             }
         }
+
         protected override bool IsCompleteSubmission(string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -124,40 +115,7 @@ namespace TrilliumC
             }
             else
             {
-                foreach (var diagnostic in result.Diagnostics.OrderBy(diag => diag.Span, new TextSpanComparer()))
-                {
-                    var lineIndex = syntaxTree.Text.GetLineIndex(diagnostic.Span.Start);
-                    var line = syntaxTree.Text.Lines[lineIndex];
-                    var lineNumber = lineIndex + 1;
-                    var character = diagnostic.Span.Start - line.Start + 1;
-
-                    Console.WriteLine();
-
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write($"({lineNumber}, {character}): ");
-                    Console.WriteLine(diagnostic);
-                    Console.ResetColor();
-
-                    var prefixSpan = TextSpan.FromBounds(line.Start, diagnostic.Span.Start);
-                    var suffixSpan = TextSpan.FromBounds(diagnostic.Span.End, line.End);
-
-                    var prefix = syntaxTree.Text.ToString(prefixSpan);
-                    var error = syntaxTree.Text.ToString(diagnostic.Span);
-                    var suffix = syntaxTree.Text.ToString(suffixSpan);
-
-                    Console.Write("    ");
-                    Console.Write(prefix);
-
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.Write(error);
-                    Console.ResetColor();
-
-                    Console.Write(suffix);
-
-                    Console.WriteLine();
-                }
-
-                Console.WriteLine();
+                Console.Out.WriteDiagnostics(result.Diagnostics, syntaxTree);
             }
         }
     }
