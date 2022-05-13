@@ -134,5 +134,11 @@ namespace Trillium.CodeAnalysis
                 return;
             body.WriteTo(writer);
         }
+
+        public ImmutableArray<Diagnostic> Emit(string moduleName, string[] references, string outputPath)
+        {
+            var program = GetProgram();
+            return Emitter.Emit(program, moduleName, references, outputPath);
+        }
     }
 }

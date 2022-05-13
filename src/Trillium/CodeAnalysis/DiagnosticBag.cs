@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mono.Cecil;
+using System.Collections;
 using Trillium.Symbols;
 using Trillium.Syntax;
 using Trillium.Text;
@@ -166,6 +167,11 @@ namespace Trillium.CodeAnalysis
             var message = $"Cannot declare main function when global statements are used.";
             Report(location, message);
         }
+        public void ReportInvalidReturnWithValueInGlobalStatements(TextLocation location)
+        {
+            var message = "The 'return' keyword cannot be followed by an expression in global statements.";
+            Report(location, message);
+        }
         public void ReportMissingReturnExpression(TextLocation location, TypeSymbol returnType)
         {
             var message = $"An expression of type '{returnType}' is expected.";
@@ -176,6 +182,37 @@ namespace Trillium.CodeAnalysis
         {
             var message = $"Only assignment and call expressions can be used as a statement.";
             Report(location, message);
+        }
+
+        public void ReportInvalidReference(string path)
+        {
+            var message = $"The reference is not a valid .NET assembly: '{path}'";
+            Report(default, message);
+        }
+
+        public void ReportRequiredTypeNotFound(string minskName, string metadataName)
+        {
+            var message = minskName == null
+                ? $"The required type '{metadataName}' cannot be resolved among the given references."
+                : $"The required type '{minskName}' ('{metadataName}') cannot be resolved among the given references.";
+            Report(default, message);
+        }
+
+        public void ReportRequiredTypeAmbiguous(string minskName, string metadataName, TypeDefinition[] foundTypes)
+        {
+            var assemblyNames = foundTypes.Select(t => t.Module.Assembly.Name.Name);
+            var assemblyNameList = string.Join(", ", assemblyNames);
+            var message = minskName == null
+                ? $"The required type '{minskName}' was found in multiple references: {assemblyNameList}."
+                : $"The required type '{minskName}' ('{metadataName}') was found in multiple references: {assemblyNameList}.";
+            Report(default, message);
+        }
+
+        public void ReportRequiredMethodNotFound(string typeName, string methodName, string[] parameterTypeNames)
+        {
+            var parameterTypeNameList = string.Join(", ", parameterTypeNames);
+            var message = $"The required method '{typeName}.{methodName}({parameterTypeNameList})' cannot be resolved among the given references.";
+            Report(default, message);
         }
     }
 }
