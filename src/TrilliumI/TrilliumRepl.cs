@@ -4,9 +4,9 @@ using Trillium.Symbols;
 using Trillium.Syntax;
 using Trillium.Text;
 
-namespace TrilliumC
+namespace TrilliumI
 {
-    internal sealed class MinskRepl : Repl
+    internal sealed class TrilliumRepl : Repl
     {
         private Compilation _previous;
         private bool _showTree;

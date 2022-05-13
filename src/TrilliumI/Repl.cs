@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace TrilliumC
+namespace TrilliumI
 {
     internal abstract class Repl
     {

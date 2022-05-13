@@ -1,5 +1,4 @@
-﻿
-namespace TrilliumC
+﻿namespace TrilliumI
 {
     internal static class Program
     {
