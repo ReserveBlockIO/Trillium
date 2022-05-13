@@ -11,15 +11,16 @@ namespace Trillium.Text
     {
         private readonly string _text;
 
-        private SourceText(string text)
+        private SourceText(string text, string fileName)
         {
             _text = text;
+            FileName = fileName;
             Lines = ParseLines(this, text);
         }
 
-        public static SourceText From(string text)
+        public static SourceText From(string text, string fileName = "")
         {
-            return new SourceText(text);
+            return new SourceText(text, fileName);
         }
 
         private static ImmutableArray<TextLine> ParseLines(SourceText sourceText, string text)
@@ -79,6 +80,8 @@ namespace Trillium.Text
         public char this[int index] => _text[index];
 
         public int Length => _text.Length;
+
+        public string FileName { get; }
 
         public int GetLineIndex(int position)
         {

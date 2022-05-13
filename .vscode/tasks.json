@@ -4,7 +4,7 @@
         {
             "label": "build",
             "command": "dotnet",
-            "type": "process",
+            "type": "shell",
             "args": [
                 "build",
                 "${workspaceFolder}/src/Trillium.sln"
@@ -20,7 +20,7 @@
                 "--project",
                 "${workspaceFolder}/src/TrilliumC/TrilliumC.csproj",
                 "--",
-                "${file}"
+                "${fileDirname}"
             ],
             "presentation": {
                 "echo": true,
