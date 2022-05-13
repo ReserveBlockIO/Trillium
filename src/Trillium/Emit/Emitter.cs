@@ -53,7 +53,7 @@ namespace Trillium.Emit
                 knownTypes.Add(typeSymbol, typeReference);
             }
 
-            TypeReference ResolveType(string minskName, string metadataName)
+            TypeReference ResolveType(string trilliumName, string metadataName)
             {
                 var foundTypes = assemblies.SelectMany(a => a.Modules)
                                            .SelectMany(m => m.Types)
@@ -66,11 +66,11 @@ namespace Trillium.Emit
                 }
                 else if (foundTypes.Length == 0)
                 {
-                    result.ReportRequiredTypeNotFound(minskName, metadataName);
+                    result.ReportRequiredTypeNotFound(trilliumName, metadataName);
                 }
                 else
                 {
-                    result.ReportRequiredTypeAmbiguous(minskName, metadataName, foundTypes);
+                    result.ReportRequiredTypeAmbiguous(trilliumName, metadataName, foundTypes);
                 }
 
                 return null;
@@ -138,7 +138,7 @@ namespace Trillium.Emit
             typeDefinition.Methods.Add(mainMethod);
 
             var ilProcessor = mainMethod.Body.GetILProcessor();
-            ilProcessor.Emit(OpCodes.Ldstr, "Hello world from Minsk!");
+            ilProcessor.Emit(OpCodes.Ldstr, "Hello world from Trillium!");
             ilProcessor.Emit(OpCodes.Call, consoleWriteLineReference);
             ilProcessor.Emit(OpCodes.Ret);
 

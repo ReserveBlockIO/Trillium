@@ -190,21 +190,21 @@ namespace Trillium.CodeAnalysis
             Report(default, message);
         }
 
-        public void ReportRequiredTypeNotFound(string minskName, string metadataName)
+        public void ReportRequiredTypeNotFound(string trilliumName, string metadataName)
         {
-            var message = minskName == null
+            var message = trilliumName == null
                 ? $"The required type '{metadataName}' cannot be resolved among the given references."
-                : $"The required type '{minskName}' ('{metadataName}') cannot be resolved among the given references.";
+                : $"The required type '{trilliumName}' ('{metadataName}') cannot be resolved among the given references.";
             Report(default, message);
         }
 
-        public void ReportRequiredTypeAmbiguous(string minskName, string metadataName, TypeDefinition[] foundTypes)
+        public void ReportRequiredTypeAmbiguous(string trilliumName, string metadataName, TypeDefinition[] foundTypes)
         {
             var assemblyNames = foundTypes.Select(t => t.Module.Assembly.Name.Name);
             var assemblyNameList = string.Join(", ", assemblyNames);
-            var message = minskName == null
-                ? $"The required type '{minskName}' was found in multiple references: {assemblyNameList}."
-                : $"The required type '{minskName}' ('{metadataName}') was found in multiple references: {assemblyNameList}.";
+            var message = trilliumName == null
+                 ? $"The required type '{metadataName}' was found in multiple references: {assemblyNameList}."
+                : $"The required type '{trilliumName}' ('{metadataName}') was found in multiple references: {assemblyNameList}.";
             Report(default, message);
         }
 
