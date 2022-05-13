@@ -2,7 +2,7 @@
   "profiles": {
     "TrilliumC": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\Aaron\\Downloads\\Trillium-ec9939c5ca6b00e5da96c49ca265ff2086c79207\\Trillium\\src\\TrilliumC\\bin\\Debug\\net6.0\\samples\\hello\""
+      "commandLineArgs": "\"C:\\Users\\Aaron\\source\\RBX\\Trillium\\src\\TrilliumC\\bin\\Debug\\net6.0\\samples\\hello\""
     }
   }
 }

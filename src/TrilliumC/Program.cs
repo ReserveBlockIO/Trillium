@@ -38,6 +38,8 @@ namespace Trillium
             var compilation = Compilation.Create(syntaxTrees.ToArray());
             var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
 
+            var data = ReadConstants.ReadConstants.SCReadData;
+
             if (!result.Diagnostics.Any())
             {
                 if (result.Value != null)

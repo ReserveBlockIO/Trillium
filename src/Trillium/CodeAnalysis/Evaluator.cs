@@ -256,8 +256,9 @@ namespace Trillium.CodeAnalysis
                 var message = (string)EvaluateExpression(node.Arguments[0]);
                 if(message != "" && message != null)
                 {
-                    messageDict.Add("NFTMain", message.Split(new string[] { "|->" }, StringSplitOptions.None));
-                    //send to CLI
+                    var messageArray = message.Split(new string[] { "|->" }, StringSplitOptions.None);
+                    ReadConstants.ReadConstants.SCReadData.Add(messageArray[0], messageArray);
+                    
                 }
                 Console.WriteLine(message);
                 return null;

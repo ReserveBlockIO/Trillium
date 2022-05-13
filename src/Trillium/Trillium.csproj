@@ -4,6 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Trillium Nuget for Smart Contracts within ReserveBlock</Description>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>https://reserveblock.io</PackageProjectUrl>
+    <PackageIcon>rbxcubetransparentmain.png</PackageIcon>
+    <RepositoryUrl>https://github.com/ReserveBlockIO/Trillium</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\ReserveBlockWindowsWallet\ReserveBlockWinWallet\Assets\Images\rbxcubetransparentmain.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
