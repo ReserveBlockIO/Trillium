@@ -11,7 +11,7 @@ namespace Trillium
         {
             if (args.Length == 0)
             {
-                Console.Error.WriteLine("usage: mc <source-paths>");
+                Console.Error.WriteLine("usage: TrilliumC <source-paths>");
                 return 1;
             }
 
@@ -34,7 +34,7 @@ namespace Trillium
             if (hasErrors)
                 return 1;
 
-            var compilation = new Compilation(syntaxTrees.ToArray());
+            var compilation = Compilation.Create(syntaxTrees.ToArray());
             var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
 
             if (!result.Diagnostics.Any())
@@ -59,7 +59,7 @@ namespace Trillium
             {
                 if (Directory.Exists(path))
                 {
-                    result.UnionWith(Directory.EnumerateFiles(path, "*.ms", SearchOption.AllDirectories));
+                    result.UnionWith(Directory.EnumerateFiles(path, "*.trlm", SearchOption.AllDirectories));
                 }
                 else
                 {

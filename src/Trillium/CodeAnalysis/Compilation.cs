@@ -12,19 +12,27 @@ namespace Trillium.CodeAnalysis
     {
         private BoundGlobalScope _globalScope;
 
-        public Compilation(params SyntaxTree[] syntaxTrees)
-            : this(null, syntaxTrees)
+        private Compilation(bool isScript, Compilation previous, params SyntaxTree[] syntaxTrees)
         {
-        }
-
-        private Compilation(Compilation previous, params SyntaxTree[] syntaxTrees)
-        {
+            IsScript = isScript;
             Previous = previous;
             SyntaxTrees = syntaxTrees.ToImmutableArray();
         }
 
+        public static Compilation Create(params SyntaxTree[] syntaxTrees)
+        {
+            return new Compilation(isScript: false, previous: null, syntaxTrees);
+        }
+
+        public static Compilation CreateScript(Compilation previous, params SyntaxTree[] syntaxTrees)
+        {
+            return new Compilation(isScript: true, previous, syntaxTrees);
+        }
+
+        public bool IsScript { get; }
         public Compilation Previous { get; }
         public ImmutableArray<SyntaxTree> SyntaxTrees { get; }
+        public FunctionSymbol MainFunction => GlobalScope.MainFunction;
         public ImmutableArray<FunctionSymbol> Functions => GlobalScope.Functions;
         public ImmutableArray<VariableSymbol> Variables => GlobalScope.Variables;
 
@@ -34,7 +42,7 @@ namespace Trillium.CodeAnalysis
             {
                 if (_globalScope == null)
                 {
-                    var globalScope = Binder.BindGlobalScope(Previous?.GlobalScope, SyntaxTrees);
+                    var globalScope = Binder.BindGlobalScope(IsScript, Previous?.GlobalScope, SyntaxTrees);
                     Interlocked.CompareExchange(ref _globalScope, globalScope, null);
                 }
 
@@ -58,9 +66,6 @@ namespace Trillium.CodeAnalysis
                     .Where(fi => fi.FieldType == typeof(FunctionSymbol))
                     .Select(fi => (FunctionSymbol)fi.GetValue(obj: null))
                     .ToList();
-                foreach (var builtin in builtinFunctions)
-                    if (seenSymbolNames.Add(builtin.Name))
-                        yield return builtin;
 
                 foreach (var function in submission.Functions)
                     if (seenSymbolNames.Add(function.Name))
@@ -70,19 +75,18 @@ namespace Trillium.CodeAnalysis
                     if (seenSymbolNames.Add(variable.Name))
                         yield return variable;
 
+                foreach (var builtin in builtinFunctions)
+                    if (seenSymbolNames.Add(builtin.Name))
+                        yield return builtin;
+
                 submission = submission.Previous;
             }
-        }
-
-        public Compilation ContinueWith(SyntaxTree syntaxTree)
-        {
-            return new Compilation(this, syntaxTree);
         }
 
         private BoundProgram GetProgram()
         {
             var previous = Previous == null ? null : Previous.GetProgram();
-            return Binder.BindProgram(previous, GlobalScope);
+            return Binder.BindProgram(IsScript, previous, GlobalScope);
         }
 
         public EvaluationResult Evaluate(Dictionary<VariableSymbol, object> variables)
@@ -95,15 +99,15 @@ namespace Trillium.CodeAnalysis
 
             var program = GetProgram();
 
-            var appPath = Environment.GetCommandLineArgs()[0];
-            var appDirectory = Path.GetDirectoryName(appPath);
-            var cfgPath = Path.Combine(appDirectory, "cfg.dot");
-            var cfgStatement = !program.Statement.Statements.Any() && program.Functions.Any()
-                                  ? program.Functions.Last().Value
-                                  : program.Statement;
-            var cfg = ControlFlowGraph.Create(cfgStatement);
-            using (var streamWriter = new StreamWriter(cfgPath))
-                cfg.WriteTo(streamWriter);
+            // var appPath = Environment.GetCommandLineArgs()[0];
+            // var appDirectory = Path.GetDirectoryName(appPath);
+            // var cfgPath = Path.Combine(appDirectory, "cfg.dot");
+            // var cfgStatement = !program.Statement.Statements.Any() && program.Functions.Any()
+            //                       ? program.Functions.Last().Value
+            //                       : program.Statement;
+            // var cfg = ControlFlowGraph.Create(cfgStatement);
+            // using (var streamWriter = new StreamWriter(cfgPath))
+            //     cfg.WriteTo(streamWriter);
 
             if (program.Diagnostics.Any())
                 return new EvaluationResult(program.Diagnostics.ToImmutableArray(), null);
@@ -115,24 +119,10 @@ namespace Trillium.CodeAnalysis
 
         public void EmitTree(TextWriter writer)
         {
-            var program = GetProgram();
-
-            if (program.Statement.Statements.Any())
-            {
-                program.Statement.WriteTo(writer);
-            }
-            else
-            {
-                foreach (var functionBody in program.Functions)
-                {
-                    if (!GlobalScope.Functions.Contains(functionBody.Key))
-                        continue;
-
-                    functionBody.Key.WriteTo(writer);
-                    writer.WriteLine();
-                    functionBody.Value.WriteTo(writer);
-                }
-            }
+            if (GlobalScope.MainFunction != null)
+                EmitTree(GlobalScope.MainFunction, writer);
+            else if (GlobalScope.ScriptFunction != null)
+                EmitTree(GlobalScope.ScriptFunction, writer);
         }
 
         public void EmitTree(FunctionSymbol symbol, TextWriter writer)

@@ -35,7 +35,12 @@ namespace Trillium.CodeAnalysis
 
         public object Evaluate()
         {
-            return EvaluateStatement(_program.Statement);
+            var function = _program.MainFunction ?? _program.ScriptFunction;
+            if (function == null)
+                return null;
+
+            var body = _functions[function];
+            return EvaluateStatement(body);
         }
 
         private object EvaluateStatement(BoundBlockStatement body)
@@ -269,7 +274,9 @@ namespace Trillium.CodeAnalysis
         private object EvaluateConversionExpression(BoundConversionExpression node)
         {
             var value = EvaluateExpression(node.Expression);
-            if (node.Type == TypeSymbol.Bool)
+            if (node.Type == TypeSymbol.Any)
+                return value;
+            else if (node.Type == TypeSymbol.Bool)
                 return Convert.ToBoolean(value);
             else if (node.Type == TypeSymbol.Int)
                 return Convert.ToInt32(value);
