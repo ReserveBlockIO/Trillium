@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Trillium.Syntax
+﻿namespace Trillium.Syntax
 {
     public sealed class VariableDeclarationSyntax : StatementSyntax
     {
-        public VariableDeclarationSyntax(SyntaxToken keyword, SyntaxToken identifier, SyntaxToken equalsToken, ExpressionSyntax initializer)
+        public VariableDeclarationSyntax(SyntaxToken keyword, SyntaxToken identifier, TypeClauseSyntax typeClause, SyntaxToken equalsToken, ExpressionSyntax initializer)
         {
             Keyword = keyword;
             Identifier = identifier;
+            TypeClause = typeClause;
             EqualsToken = equalsToken;
             Initializer = initializer;
         }
@@ -19,6 +14,7 @@ namespace Trillium.Syntax
         public override SyntaxKind Kind => SyntaxKind.VariableDeclaration;
         public SyntaxToken Keyword { get; }
         public SyntaxToken Identifier { get; }
+        public TypeClauseSyntax TypeClause { get; }
         public SyntaxToken EqualsToken { get; }
         public ExpressionSyntax Initializer { get; }
     }
