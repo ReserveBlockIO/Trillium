@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Trillium.Binding;
+using Trillium.Emit;
 using Trillium.Lowering;
 using Trillium.Symbols;
 using Trillium.Syntax;
