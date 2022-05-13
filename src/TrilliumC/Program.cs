@@ -4,7 +4,7 @@ using Trillium.IO;
 using Trillium.Symbols;
 using Trillium.Syntax;
 
-namespace Trillium
+namespace TrilliumC
 {
     internal static class Program
     {
@@ -18,7 +18,7 @@ namespace Trillium
 
             var options = new OptionSet
             {
-                "usage: msc <source-paths> [options]",
+                "usage: TrilliumC <source-paths> [options]",
                 { "r=", "The {path} of an assembly to reference", v => referencePaths.Add(v) },
                 { "o=", "The output {path} of the assembly to create", v => outputPath = v },
                 { "m=", "The {name} of the module", v => moduleName = v },
