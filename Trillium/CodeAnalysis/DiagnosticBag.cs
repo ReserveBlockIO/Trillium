@@ -67,9 +67,15 @@ namespace Trillium.CodeAnalysis
             Report(span, message);
         }
 
-        public void ReportUndefinedName(TextSpan span, string name)
+        public void ReportUndefinedVariable(TextSpan span, string name)
         {
             var message = $"Variable '{name}' doesn't exist.";
+            Report(span, message);
+        }
+
+        public void ReportNotAVariable(TextSpan span, string name)
+        {
+            var message = $"'{name}' is not a variable.";
             Report(span, message);
         }
 
@@ -109,6 +115,12 @@ namespace Trillium.CodeAnalysis
             Report(span, message);
         }
 
+        public void ReportNotAFunction(TextSpan span, string name)
+        {
+            var message = $"'{name}' is not a function.";
+            Report(span, message);
+        }
+
         public void ReportWrongArgumentCount(TextSpan span, string name, int expectedCount, int actualCount)
         {
             var message = $"Function '{name}' requires {expectedCount} arguments but was given {actualCount}.";
@@ -133,6 +145,12 @@ namespace Trillium.CodeAnalysis
             Report(span, message);
         }
 
+        public void ReportAllPathsMustReturn(TextSpan span)
+        {
+            var message = "Not all code paths return a value.";
+            Report(span, message);
+        }
+
         public void ReportInvalidReturn(TextSpan span)
         {
             var message = "The 'return' keyword can only be used inside of functions.";
@@ -147,7 +165,7 @@ namespace Trillium.CodeAnalysis
 
         public void ReportMissingReturnExpression(TextSpan span, TypeSymbol returnType)
         {
-            var message = $"An expression of type '{returnType}' expected.";
+            var message = $"An expression of type '{returnType}' is expected.";
             Report(span, message);
         }
     }
