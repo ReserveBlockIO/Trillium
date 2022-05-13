@@ -222,7 +222,9 @@ namespace TrilliumI
 
         private static void ClearSubmissions()
         {
-            Directory.Delete(GetSubmissionsDirectory(), recursive: true);
+            var dir = GetSubmissionsDirectory();
+            if (Directory.Exists(dir))
+                Directory.Delete(dir, recursive: true);
         }
 
         private static void SaveSubmission(string text)
