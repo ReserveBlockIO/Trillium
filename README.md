@@ -14,7 +14,7 @@
 
 ![GitHub Release Date](https://img.shields.io/github/release-date/ReserveBlockIO/Trillium)
 
-Trillium is the smart contract language that will be powering our smart contracts. This is a from scratch language that has roots from C#, C, and some Javascript. The language was modeled after the Minks courses provided by Microsoft's Immo Landwerth. 
+Trillium is the smart contract language that will be powering our smart contracts. This is a from scratch language that has roots from C#, C, and some Javascript.
 
 # Core Features (Statements, expressions, etc)
 
@@ -151,6 +151,17 @@ To write and test your own contracts first follow the setup instructions above. 
 - Repo owner or admin
 - Other community or team contact
 - https://discord.gg/PnS2HRETDh
+
+# People to Thank and Sources
+
+The language was modeled after the language courses from Microsoft's Immo Landwerth and adapted further to work within the ReserveBlocks core wallet infastructure.
+
+Some other references to site are (please note none of these people worked on the project, but rather provided material to help make this. They are in no way affiliated with this project):
+
+- Clinton L. Jeffery and his Books
+- Jon Skeet and his C# In Depth books
+- Alex Williams and his debugging methodology
+- Immo Landwerth and his series
 
 # License
 
