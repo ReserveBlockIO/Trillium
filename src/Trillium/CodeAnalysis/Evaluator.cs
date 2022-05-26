@@ -263,6 +263,21 @@ namespace Trillium.CodeAnalysis
                 Console.WriteLine(message);
                 return null;
             }
+            else if(node.Function == BuiltinFunctions.DateProcess)
+            {
+                var message = (string)EvaluateExpression(node.Arguments[0]);
+                long dateTickers = Convert.ToInt64(message);
+                DateTime myDate = new DateTime(dateTickers);
+                Console.WriteLine(message + " Date: " + myDate.ToString());
+                if(myDate > DateTime.UtcNow)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
             else
             {
                 var locals = new Dictionary<VariableSymbol, object>();
