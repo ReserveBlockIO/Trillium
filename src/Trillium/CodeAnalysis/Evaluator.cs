@@ -1,5 +1,6 @@
 ﻿using Trillium.Binding;
 using Trillium.Symbols;
+using Trillium.Utilities;
 
 namespace Trillium.CodeAnalysis
 {
@@ -277,6 +278,25 @@ namespace Trillium.CodeAnalysis
                 {
                     return true;
                 }
+            }
+            else if (node.Function == BuiltinFunctions.CreateSignature)
+            {
+                var message = (string)EvaluateExpression(node.Arguments[0]);
+                var privateKey = (string)EvaluateExpression(node.Arguments[1]);
+
+                var signature = CreateSignatureUtility.CreateSignature(message, privateKey);
+
+                return signature;
+            }
+            else if (node.Function == BuiltinFunctions.ValidateSignature)
+            {
+                var message = (string)EvaluateExpression(node.Arguments[0]);
+                var address = (string)EvaluateExpression(node.Arguments[1]);
+                var sigScript = (string)EvaluateExpression(node.Arguments[2]);
+
+                var result = ValidateSignatureUtility.VerifySignature(address, message, sigScript);
+
+                return result;
             }
             else
             {
