@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://reserveblock.io</PackageProjectUrl>
     <PackageIcon>rbxcubetransparentmain.png</PackageIcon>
     <RepositoryUrl>https://github.com/ReserveBlockIO/Trillium</RepositoryUrl>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Company>ReserveBlock Foundation</Company>
     <Authors>Mathis1337</Authors>
   </PropertyGroup>
