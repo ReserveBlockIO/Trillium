@@ -1,4 +1,5 @@
-﻿using Trillium.Binding;
+﻿using System.Text;
+using Trillium.Binding;
 using Trillium.Symbols;
 using Trillium.Utilities;
 
@@ -278,6 +279,25 @@ namespace Trillium.CodeAnalysis
                 {
                     return true;
                 }
+            }
+            else if(node.Function == BuiltinFunctions.GetContractMethods)
+            {
+                var output = "";
+                StringBuilder methodList = new StringBuilder();
+                List<string> methodStringList = new List<string>();
+                
+                foreach (var func in _functions)
+                {
+                    if(!func.Key.Name.Contains("$eval"))
+                    {
+                        methodStringList.Add(func.Key.Name + "^" + func.Key.ToString());
+                    }
+                }
+
+                methodList.AppendJoin(',', methodStringList);
+                output = methodList.ToString();
+
+                return output;
             }
             else if (node.Function == BuiltinFunctions.CreateSignature)
             {

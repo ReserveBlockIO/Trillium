@@ -119,6 +119,21 @@ namespace TrilliumI
             }
         }
 
+        [MetaCommand("ml", "Lists all symbols methods")]
+        private string EvaluateMl()
+        {
+            var output = "hey";
+            var compilation = _previous ?? emptyCompilation;
+            var symbols = compilation.GetSymbols().OrderBy(s => s.Kind).ThenBy(s => s.Name);
+            foreach (var symbol in symbols)
+            {
+                symbol.WriteTo(Console.Out);
+                Console.WriteLine();
+            }
+
+            return output;
+        }
+
         [MetaCommand("exit", "Exits the Program")]
         private void EvaluateExit()
         {
