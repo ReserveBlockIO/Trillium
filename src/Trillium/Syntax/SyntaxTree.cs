@@ -9,10 +9,11 @@ namespace Trillium.Syntax
         private delegate void ParseHandler(SyntaxTree syntaxTree,
                                            out CompilationUnitSyntax root,
                                            out ImmutableArray<Diagnostic> diagnostics);
-
-        private SyntaxTree(SourceText text, ParseHandler handler)
+        
+        private SyntaxTree(SourceText text, bool preventLoopsAndRecursion, ParseHandler handler)
         {
             Text = text;
+            PreventLoopsAndRecursion = preventLoopsAndRecursion;
 
             handler(this, out var root, out var diagnostics);
 
@@ -23,6 +24,8 @@ namespace Trillium.Syntax
         public SourceText Text { get; }
         public ImmutableArray<Diagnostic> Diagnostics { get; }
         public CompilationUnitSyntax Root { get; }
+
+        public readonly bool PreventLoopsAndRecursion;
 
         public static SyntaxTree Load(string fileName)
         {
@@ -38,15 +41,15 @@ namespace Trillium.Syntax
             diagnostics = parser.Diagnostics.ToImmutableArray();
         }
 
-        public static SyntaxTree Parse(string text)
+        public static SyntaxTree Parse(string text, bool preventLoopsAndRecursion = false)
         {
             var sourceText = SourceText.From(text);
-            return Parse(sourceText);
+            return Parse(sourceText, preventLoopsAndRecursion);
         }
 
-        public static SyntaxTree Parse(SourceText text)
+        public static SyntaxTree Parse(SourceText text, bool preventLoopsAndRecursion = false)
         {
-            return new SyntaxTree(text, Parse);
+            return new SyntaxTree(text, preventLoopsAndRecursion, Parse);
         }
 
         public static ImmutableArray<SyntaxToken> ParseTokens(string text)
@@ -55,18 +58,18 @@ namespace Trillium.Syntax
             return ParseTokens(sourceText);
         }
 
-        public static ImmutableArray<SyntaxToken> ParseTokens(string text, out ImmutableArray<Diagnostic> diagnostics)
+        public static ImmutableArray<SyntaxToken> ParseTokens(string text, out ImmutableArray<Diagnostic> diagnostics, bool preventLoopsAndRecursion = false)
         {
             var sourceText = SourceText.From(text);
-            return ParseTokens(sourceText, out diagnostics);
+            return ParseTokens(sourceText, out diagnostics, preventLoopsAndRecursion);
         }
 
-        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text)
+        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text, bool preventLoopsAndRecursion = false)
         {
-            return ParseTokens(text, out _);
+            return ParseTokens(text, out _, preventLoopsAndRecursion);
         }
 
-        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text, out ImmutableArray<Diagnostic> diagnostics)
+        public static ImmutableArray<SyntaxToken> ParseTokens(SourceText text, out ImmutableArray<Diagnostic> diagnostics, bool preventLoopsAndRecursion = false)
         {
             var tokens = new List<SyntaxToken>();
 
@@ -90,7 +93,7 @@ namespace Trillium.Syntax
                 d = l.Diagnostics.ToImmutableArray();
             }
 
-            var syntaxTree = new SyntaxTree(text, ParseTokens);
+            var syntaxTree = new SyntaxTree(text, preventLoopsAndRecursion, ParseTokens);
             diagnostics = syntaxTree.Diagnostics.ToImmutableArray();
             return tokens.ToImmutableArray();
         }
