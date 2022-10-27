@@ -190,7 +190,7 @@ namespace Trillium.CodeAnalysis
             Report(location, message);
         }
 
-        public void ReportRecursion(TextLocation location, string signature)
+        public void ReportRecursion(TextLocation location)
         {
             var message = $"Potential recursion was detected involving:";
             Report(location, message);

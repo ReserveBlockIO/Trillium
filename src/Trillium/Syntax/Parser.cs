@@ -522,7 +522,7 @@ namespace Trillium.Syntax
                     .SkipWhile(x => x.func == x.index).First();
                 
                 var CyclicMemberSpan = FunctionDict.Where(x => x.Value.i == CyclicMember.index).First().Value.SignatureSpan;                
-                _diagnostics.ReportRecursion(new TextLocation(_text, CyclicMemberSpan), _text.ToString(CyclicMemberSpan));                
+                _diagnostics.ReportRecursion(new TextLocation(_text, CyclicMemberSpan));
             }
         }
     }
