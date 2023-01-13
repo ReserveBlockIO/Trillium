@@ -5,7 +5,7 @@
 [![Generic badge](https://img.shields.io/badge/%2ENet%20Core-6%2E0-blue.svg)](https://shields.io/)
 
 ![license](https://img.shields.io/github/license/ReserveBlockIO/Trillium)
-![build](https://img.shields.io/github/workflow/status/ReserveBlockIO/Trillium/.NET)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ReserveBlockIO/Trillium/dotnet.yml)
 ![issues](https://img.shields.io/github/issues/ReserveBlockIO/Trillium)
 ![Discord](https://img.shields.io/discord/917499597692211260?label=discord)
 
