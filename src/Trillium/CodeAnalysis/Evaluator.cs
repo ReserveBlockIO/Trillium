@@ -270,7 +270,7 @@ namespace Trillium.CodeAnalysis
                 var message = (string)EvaluateExpression(node.Arguments[0]);
                 long dateTickers = Convert.ToInt64(message);
                 DateTime myDate = new DateTime(dateTickers);
-                Console.WriteLine(message + " Date: " + myDate.ToString());
+                //Console.WriteLine(message + " Date: " + myDate.ToString());
                 if(myDate > DateTime.UtcNow)
                 {
                     return false;
