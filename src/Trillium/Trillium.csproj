@@ -12,13 +12,15 @@
     <Version>1.2.2</Version>
     <Company>ReserveBlock Foundation</Company>
     <Authors>Mathis1337</Authors>
+    <PackAsTool>False</PackAsTool>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Trillium</Title>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\ReserveBlockWindowsWallet\ReserveBlockWinWallet\Assets\Images\rbxcubetransparentmain.png">
+    <None Update="rbxcubetransparentmain.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
 </Project>
