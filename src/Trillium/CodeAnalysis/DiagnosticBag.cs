@@ -177,5 +177,23 @@ namespace Trillium.CodeAnalysis
             var message = $"Only assignment and call expressions can be used as a statement.";
             Report(location, message);
         }
+
+        public void ReportWhileLoop(TextLocation location)
+        {
+            var message = $"While loop was detected.";
+            Report(location, message);
+        }
+
+        public void ReportForLoop(TextLocation location)
+        {
+            var message = $"For loop was detected.";
+            Report(location, message);
+        }
+
+        public void ReportRecursion(TextLocation location)
+        {
+            var message = $"Potential recursion was detected involving:";
+            Report(location, message);
+        }
     }
 }

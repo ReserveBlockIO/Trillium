@@ -108,7 +108,7 @@ namespace Trillium.IO
                 writer.ResetColor();
 
                 var prefixSpan = TextSpan.FromBounds(line.Start, span.Start);
-                var suffixSpan = TextSpan.FromBounds(span.End, line.End);
+                var suffixSpan = TextSpan.FromBounds(Math.Min(span.End, line.End), line.End);
 
                 var prefix = text.ToString(prefixSpan);
                 var error = text.ToString(span);

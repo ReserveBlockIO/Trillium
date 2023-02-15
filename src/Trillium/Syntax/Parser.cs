@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Trillium.CodeAnalysis;
 using Trillium.Text;
+using TrilliumTest.Extensions;
 
 namespace Trillium.Syntax
 {
@@ -68,7 +69,10 @@ namespace Trillium.Syntax
         {
             var members = ParseMembers();
             var endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
-            return new CompilationUnitSyntax(_syntaxTree, members, endOfFileToken);
+            var Root = new CompilationUnitSyntax(_syntaxTree, members, endOfFileToken);
+            if (_syntaxTree.PreventLoopsAndRecursion)
+                RecursionCheck(Root);
+            return Root;
         }
 
         private ImmutableArray<MemberSyntax> ParseMembers()
@@ -260,7 +264,9 @@ namespace Trillium.Syntax
 
         private StatementSyntax ParseWhileStatement()
         {
-            var keyword = MatchToken(SyntaxKind.WhileKeyword);
+            if (_syntaxTree.PreventLoopsAndRecursion)
+                _diagnostics.ReportWhileLoop(Current.Location);
+            var keyword = MatchToken(SyntaxKind.WhileKeyword);            
             var condition = ParseExpression();
             var body = ParseStatement();
             return new WhileStatementSyntax(_syntaxTree, keyword, condition, body);
@@ -277,6 +283,8 @@ namespace Trillium.Syntax
 
         private StatementSyntax ParseForStatement()
         {
+            if (_syntaxTree.PreventLoopsAndRecursion)
+                _diagnostics.ReportForLoop(Current.Location);
             var keyword = MatchToken(SyntaxKind.ForKeyword);
             var identifier = MatchToken(SyntaxKind.IdentifierToken);
             var equalsToken = MatchToken(SyntaxKind.EqualsToken);
@@ -461,6 +469,61 @@ namespace Trillium.Syntax
         {
             var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
             return new NameExpressionSyntax(_syntaxTree, identifierToken);
+        }
+
+        private void RecursionCheck(SyntaxNode root)
+        {
+            var descendants = root.Descendants().ToArray();
+
+            var Functions = root.GetChildren().Select(x => x as FunctionDeclarationSyntax).Where(x => x != null)
+                .Select(x => {
+                    var Children = x.GetChildren();
+                    var Identifier = Children.Where(x => x.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                    var NumParameters = Children.Where(x => x.Kind == SyntaxKind.Parameter).Count();
+
+                    var SignatureSpan = new TextSpan(x.Span.Start, Children.Where(x => !(x is BlockStatementSyntax)).Max(x => x.Span.End) - x.Span.Start);
+                    return new
+                    {
+                        x.Span,
+                        Signature = ((Identifier as SyntaxToken)?.Text, NumParameters),
+                        SignatureSpan
+                    };
+                })
+                .OrderBy(x => x.Span.Start)
+                .ToArray();
+
+            var FunctionCalls = descendants.Select(x => x as CallExpressionSyntax).Where(x => x != null)
+                .Select(x => {
+                    var Children = x.GetChildren();
+                    var Identifier = Children.Where(x => x.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                    var NumParameters = Children.Where(x => x is ExpressionSyntax).Count();
+                    return new
+                    {
+                        x.Span,
+                        Signature = ((Identifier as SyntaxToken)?.Text, NumParameters)
+                    };
+                })
+                .ToArray();
+
+            var FunctionDict = Functions.Select((x, i) => (x.Signature, x.Span, i, x.SignatureSpan)).ToDictionary(x => x.Signature, x => (x.i, x.Span, x.SignatureSpan));
+            var FunctionAdjacencies = Enumerable.Range(0, Functions.Length).Select(x => new List<int>()).ToArray();
+            for (var i = 0; i < FunctionCalls.Length; i++)
+            {
+                var FunctionCall = FunctionCalls[i];
+                var FunctionCallReference = FunctionDict[FunctionCall.Signature];
+                var FunctionCallEnd = FunctionCall.Span.End;
+                FunctionAdjacencies[Functions.IndexForFirstTrue(y => y.Span.End >= FunctionCallEnd)].Add(FunctionCallReference.i);
+            }
+
+            var SortedFunctions = FunctionAdjacencies.TopologicalSort();
+            if (SortedFunctions.Count != Functions.Length)
+            {
+                var CyclicMember = SortedFunctions.OrderBy(x => x).Select((x, i) => (func: x, index: i))
+                    .SkipWhile(x => x.func == x.index).First();
+                
+                var CyclicMemberSpan = FunctionDict.Where(x => x.Value.i == CyclicMember.index).First().Value.SignatureSpan;                
+                _diagnostics.ReportRecursion(new TextLocation(_text, CyclicMemberSpan));
+            }
         }
     }
 }
