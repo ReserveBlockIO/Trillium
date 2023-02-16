@@ -9,13 +9,23 @@
     <PackageProjectUrl>https://reserveblock.io</PackageProjectUrl>
     <PackageIcon>rbxcubetransparentmain.png</PackageIcon>
     <RepositoryUrl>https://github.com/ReserveBlockIO/Trillium</RepositoryUrl>
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <Company>ReserveBlock Foundation</Company>
     <Authors>Mathis1337</Authors>
     <PackAsTool>False</PackAsTool>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Trillium</Title>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>trillium;rbx;reserveblock;trlm</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="rbxcubetransparentmain.png">
