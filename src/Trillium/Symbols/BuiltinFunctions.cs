@@ -18,6 +18,7 @@ namespace Trillium.Symbols
         public static readonly FunctionSymbol CreateSignature = new FunctionSymbol("createSig", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.String);
         public static readonly FunctionSymbol ValidateSignature = new FunctionSymbol("validateSig", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Bool);
         public static readonly FunctionSymbol Send = new FunctionSymbol("send", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Void);
+        public static readonly FunctionSymbol GetSCProperties = new FunctionSymbol("getProperties", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Any);
 
         internal static IEnumerable<FunctionSymbol> GetAll()
             => typeof(BuiltinFunctions).GetFields(BindingFlags.Public | BindingFlags.Static)

@@ -510,19 +510,26 @@ namespace Trillium.Syntax
             for (var i = 0; i < FunctionCalls.Length; i++)
             {
                 var FunctionCall = FunctionCalls[i];
-                var FunctionCallReference = FunctionDict[FunctionCall.Signature];
-                var FunctionCallEnd = FunctionCall.Span.End;
-                FunctionAdjacencies[Functions.IndexForFirstTrue(y => y.Span.End >= FunctionCallEnd)].Add(FunctionCallReference.i);
+                if(FunctionDict.ContainsKey(FunctionCall.Signature))
+                {
+                    var FunctionCallReference = FunctionDict[FunctionCall.Signature];
+                    var FunctionCallEnd = FunctionCall.Span.End;
+                    FunctionAdjacencies[Functions.IndexForFirstTrue(y => y.Span.End >= FunctionCallEnd)].Add(FunctionCallReference.i);
+                }
             }
 
             var SortedFunctions = FunctionAdjacencies.TopologicalSort();
             if (SortedFunctions.Count != Functions.Length)
             {
-                var CyclicMember = SortedFunctions.OrderBy(x => x).Select((x, i) => (func: x, index: i))
-                    .SkipWhile(x => x.func == x.index).First();
-                
-                var CyclicMemberSpan = FunctionDict.Where(x => x.Value.i == CyclicMember.index).First().Value.SignatureSpan;                
-                _diagnostics.ReportRecursion(new TextLocation(_text, CyclicMemberSpan));
+                var topLevel = FunctionAdjacencies.Length;
+                var badFunctionArray = Enumerable.Range(0, topLevel).Except(SortedFunctions).ToArray();
+                //loops over all found recursive methods.
+                foreach (var badFunctionPos in badFunctionArray)
+                {
+                    var cyclicMember = badFunctionPos;
+                    var CyclicMemberSpan = FunctionDict.Where(x => x.Value.i == cyclicMember).First().Value.SignatureSpan;
+                    _diagnostics.ReportRecursion(new TextLocation(_text, CyclicMemberSpan));
+                }
             }
         }
     }

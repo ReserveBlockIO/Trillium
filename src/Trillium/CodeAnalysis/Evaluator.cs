@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 using Trillium.Binding;
 using Trillium.Symbols;
 using Trillium.Utilities;
@@ -290,7 +291,8 @@ namespace Trillium.CodeAnalysis
                 {
                     if(!func.Key.Name.Contains("$eval"))
                     {
-                        methodStringList.Add(func.Key.Name + "^" + func.Key.ToString());
+                        //methodStringList.Add(func.Key.Name + "^" + func.Key.ToString());
+                        methodStringList.Add(func.Key.ToString().Replace("function ", ""));
                     }
                 }
 
@@ -317,6 +319,16 @@ namespace Trillium.CodeAnalysis
                 var result = ValidateSignatureUtility.VerifySignature(address, message, sigScript);
 
                 return result;
+            }
+            else if (node.Function == BuiltinFunctions.GetSCProperties)
+            {
+                var propertyList = (string)EvaluateExpression(node.Arguments[0]);
+
+                var map = propertyList.Split(new string[] { "<|>" }, StringSplitOptions.None)
+                    .Select(p => p.Trim().Split(':'))
+                    .ToDictionary(p => p[0], p => p[1]);
+
+                return map;
             }
             else
             {

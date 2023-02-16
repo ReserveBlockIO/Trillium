@@ -171,7 +171,7 @@ namespace TrilliumI
 
         protected override void EvaluateSubmission(string text)
         {
-            var syntaxTree = SyntaxTree.Parse(text, true);
+            var syntaxTree = SyntaxTree.Parse(text, true); //prevents loop protection if set to true
             var compilation = Compilation.CreateScript(_previous, syntaxTree);
 
             if (_showTree)
