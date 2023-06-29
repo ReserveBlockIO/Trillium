@@ -233,7 +233,7 @@ namespace Trillium.CodeAnalysis
             }
         }
 
-        private object EvaluateCallExpression(BoundCallExpression node)
+        private object? EvaluateCallExpression(BoundCallExpression node)
         {
             if (node.Function == BuiltinFunctions.Input)
             {
@@ -329,6 +329,39 @@ namespace Trillium.CodeAnalysis
                     .ToDictionary(p => p[0], p => p[1]);
 
                 return map;
+            }
+            else if(node.Function == BuiltinFunctions.GetTokenDetails)
+            {
+                try
+                {
+                    var name = (string)EvaluateExpression(node.Arguments[0]);
+                    var ticker = (string)EvaluateExpression(node.Arguments[1]);
+                    var decimalPlace = (int?)EvaluateExpression(node.Arguments[2]);
+                    var tokenSupply = (int?)EvaluateExpression(node.Arguments[3]);
+                    var isVoting = (bool)EvaluateExpression(node.Arguments[4]);
+                    var isBurnable = (bool)EvaluateExpression(node.Arguments[5]);
+                    var tokenImageURL = (string)EvaluateExpression(node.Arguments[6]);
+                    var tokenImageBase = (string)EvaluateExpression(node.Arguments[7]);
+
+                    if (name != null && ticker != null && decimalPlace.HasValue && tokenSupply.HasValue)
+                    {
+                        var token = new ClassUtility.Token { 
+                            Name = name,
+                            Ticker = ticker,
+                            DecimalPlaces = decimalPlace.Value,
+                            TotalSupply = tokenSupply.Value,
+                            IsBurningEnabled = isBurnable,
+                            IsVotingEnabled = isVoting,
+                            TokenImageURL = tokenImageURL == "0" ? null : tokenImageURL,
+                            TokenImageBase = tokenImageBase == "0" ? null : tokenImageBase
+                        };
+
+                        return token;
+                    }
+                }
+                catch { }
+
+                return null;
             }
             else
             {
