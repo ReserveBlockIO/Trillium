@@ -20,7 +20,7 @@ namespace Trillium.Symbols
         public static readonly FunctionSymbol Send = new FunctionSymbol("send", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Void);
         public static readonly FunctionSymbol GetSCProperties = new FunctionSymbol("getProperties", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Any);
         public static readonly FunctionSymbol GetTokenDetails = new FunctionSymbol("getTokenDetails", ImmutableArray.Create(new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("max", TypeSymbol.Int), new ParameterSymbol("max", TypeSymbol.Int), new ParameterSymbol("bool", TypeSymbol.Bool), new ParameterSymbol("bool", TypeSymbol.Bool), new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("text", TypeSymbol.String)), TypeSymbol.Any);
-
+        public static readonly FunctionSymbol GetVotingRules = new FunctionSymbol("getVotingRules", ImmutableArray.Create(new ParameterSymbol("max", TypeSymbol.Int), new ParameterSymbol("text", TypeSymbol.String), new ParameterSymbol("max", TypeSymbol.Int), new ParameterSymbol("bool", TypeSymbol.Bool)), TypeSymbol.Any);
 
         internal static IEnumerable<FunctionSymbol> GetAll()
             => typeof(BuiltinFunctions).GetFields(BindingFlags.Public | BindingFlags.Static)

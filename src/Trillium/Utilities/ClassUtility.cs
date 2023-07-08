@@ -20,5 +20,13 @@ namespace Trillium.Utilities
             public string? TokenImageBase { get; set; }
             public bool IsTotalSupplyInfinite { get { return TotalSupply == 0 ? true : false; } }
         }
+
+        public class VotingRules
+        {
+            public string RuleName { get; set; }
+            public string RuleSummary { get; set; }
+            public string RuleType { get; set; }
+            public object RuleValue { get; set; }
+        }
     }
 }

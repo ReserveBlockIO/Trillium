@@ -363,6 +363,23 @@ namespace Trillium.CodeAnalysis
 
                 return null;
             }
+            else if(node.Function == BuiltinFunctions.GetVotingRules)
+            {
+                try
+                {
+                    var voteAmount = (int)EvaluateExpression(node.Arguments[0]);
+                    var voteToken = (string)EvaluateExpression(node.Arguments[1]);
+                    var maxVotingDays = (int)EvaluateExpression(node.Arguments[2]);
+                    var requireTx = (bool)EvaluateExpression(node.Arguments[3]);
+
+                    var votingRules = VotingRulesUtility.CreateRules(voteAmount, voteToken, maxVotingDays, requireTx);
+
+                    return votingRules;
+                }
+                catch { }
+
+                return null;
+            }
             else
             {
                 var locals = new Dictionary<VariableSymbol, object>();
